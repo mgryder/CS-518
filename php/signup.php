@@ -1,6 +1,11 @@
 <?php
 	//written using example code provided by Professor Jian Wu
 	
+	use PHPMailer\PHPMailer\PHPMailer;
+	use PHPMailer\PHPMailer\Exception;
+	
+	require 'vendor\autoload.php';
+	
 	require 'authentication.php';
 
 	session_start();
@@ -10,31 +15,117 @@
 			<h1>Gryder Gaming Database</h1>
 		</header>';
 
-	if (isset($_POST['txtUserId']) && isset($_POST['txtPassword']) && isset($_POST['retxtPassword'])) {
+	if (isset($_POST['txtUserId'])) {
 
+		//echo 'Im here';
 		$loginUserId = $_POST['txtUserId'];
-		$loginPassword = $_POST['txtPassword'];
-		$reLoginPassword = $_POST['retxtPassword'];
+		$loginPassword = '1234';
 		$email = $_POST['email'];
 		
-		if ($loginPassword == $reLoginPassword) 
+        $conn = new mysqli($server, $sqlUsername, $sqlPassword, $databaseName);
+		
+		$userTable = "accounts"; 
+
+		$ps = md5($loginPassword);
+		$sql="SELECT * FROM accounts WHERE email='$email'";
+		$result=$conn->query($sql);
+		if(!$result)
 		{
-            $conn = new mysqli($server, $sqlUsername, $sqlPassword, $databaseName);
+			$mail = new PHPMailer(TRUE);
+			try
+			{
+				$mail->IsSMTP();
+				$mail->SMTPAuth = true;
+				$mail->SMTPSecure='ssl';
+				$mail->Host='smtp.gmail.com';
+				$mail->Port=465;
+				$mail->Username='chesschamptwo@gmail.com';
+				$mail->Password='Gameday6';
+				//echo 'Im here<br>';
+				$mail->setFrom('doNotReply@gryderGaming.com', 'Gryder Gaming');
+				//echo 'Im here<br>';
+				$mail->addAddress($email, $loginUserId);
+				//echo 'Im here<br>';
+				$mail->Subject = 'Sign Up';
+				//echo 'Im here<br>';
+				$mail->Body = 'Verification Code: 1234';
+				//echo 'Im here<br>';
+				$mail->send();
+				//echo 'Im here<br>';
+			}
+			catch(Exception $e)
+			{
+				echo $e->errorMessage();
+			}
+			catch(\Exception $e)
+			{
+				echo $e->getMessage();
+			}
+			
+			echo '<form action="" method="post" name="verify" id="verify">
+			Enter Verification Code: <input name="code" type="text" id="code">
+			<input name="submit" type="submit" id="submit" value="Submit">
+			</form>';
+						
+			$sql2 = "INSERT INTO $userTable VALUES ('$email', '$loginUserId', '$ps')";
 		
-			$userTable = "accounts"; 
-
-			$ps = md5($loginPassword);
-
-			$sql = "INSERT INTO $userTable VALUES ('$email', '$loginUserId', '$ps')";
-		
-            $query_result = $conn->query($sql) or die( "SQL Query ERROR. User can not be created.");
-
+			$query_result = $conn->query($sql2) or die( "SQL Query ERROR. User can not be created.");
+				
 			header('Location: login.php');
 			exit;
-		} 
-		else 
+		}
+		else
 		{
-			$errorMessage = "Passwords do not match";
+			$nrows = $result->num_rows;
+			if ( $nrows != 1)
+			{
+				$mail = new PHPMailer(TRUE);
+				try
+				{
+					$mail->IsSMTP();
+					$mail->SMTPAuth = true;
+					$mail->SMTPSecure='ssl';
+					$mail->Host='smtp.gmail.com';
+					$mail->Port=465;
+					$mail->Username='chesschamptwo@gmail.com';
+					$mail->Password='Gameday6';
+					//echo 'Im here<br>';
+					$mail->setFrom('doNotReply@gryderGaming.com', 'Gryder Gaming');
+					//echo 'Im here<br>';
+					$mail->addAddress($email, $loginUserId);
+					//echo 'Im here<br>';
+					$mail->Subject = 'Sign Up';
+					//echo 'Im here<br>';
+					$mail->Body = 'Password: 1234';
+					//echo 'Im here<br>';
+					$mail->send();
+					//echo 'Im here<br>';
+				}
+				catch(Exception $e)
+				{
+					echo $e->errorMessage();
+				}
+				catch(\Exception $e)
+				{
+					echo $e->getMessage();
+				}
+								
+				echo '<form action="" method="post" name="verify" id="verify">
+				Enter Verification Code: <input name="code" type="text" id="code">
+				<input name="submit" type="submit" id="submit" value="Submit">
+				</form>';
+					
+				$sql2 = "INSERT INTO $userTable VALUES ('$email', '$loginUserId', '$ps')";
+		
+				$query_result = $conn->query($sql2) or die( "SQL Query ERROR. User can not be created.");
+			
+				header('Location: login.php');
+				exit;
+			}
+			else
+			{
+				echo 'Duplicate email';
+			}
 		}
 	}
 ?>
@@ -60,7 +151,7 @@
 		   <td><input name="txtUserId" type="text" id="txtUserId"></td>
 		  </tr>
 		  
-		  <tr>
+		  <!--<tr>
 		   <td width="150">Password</td>
 		   <td><input name="txtPassword" type="password" id="txtPassword"></td>
 		  </tr>
@@ -68,7 +159,7 @@
 		  <tr>
 		   <td width="150">Retype Password</td>
 		   <td><input name="retxtPassword" type="password" id="retxtPassword"></td>
-		  </tr>
+		  </tr>-->
 		  
 		  <tr>
 		   <td width="150">&nbsp;</td>

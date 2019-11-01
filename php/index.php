@@ -33,5 +33,11 @@
 			Search here: <input type="text" name="keywords">
 			<input type="submit" value="search">
 		</form>
+		<form action="advanced.php" method="post">
+			<input type="submit" value="advanced search">
+		</form>
+		<form action="addDoc.php" method="post">
+			<input type="submit" value="add">
+		</form>
 	</body>
 </html>
