@@ -22,7 +22,7 @@
 
 			$uid = $_SESSION['userID'];
 			$email = $_POST['newEmail'];
-			$sql = "UPDATE accounts SET email='$email' WHERE user = '$uid'";
+			$sql = "UPDATE accounts2 SET email='$email' WHERE user = '$uid'";
 			$conn->query($sql);
 			$conn->close();
 			header('Location: profile.php');

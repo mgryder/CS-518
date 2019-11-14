@@ -11,7 +11,7 @@
 	{
 		$conn=new mysqli($server, $sqlUsername, $sqlPassword, $databaseName);
 		$email=$_POST['email'];
-		$sql="SELECT * FROM accounts WHERE email='$email'";
+		$sql="SELECT * FROM accounts2 WHERE email='$email'";
 		$result=$conn->query($sql);
 		if(!$result)
 		{

@@ -24,10 +24,10 @@
 		
         $conn = new mysqli($server, $sqlUsername, $sqlPassword, $databaseName);
 		
-		$userTable = "accounts"; 
+		$userTable = "accounts2"; 
 
 		$ps = md5($loginPassword);
-		$sql="SELECT * FROM accounts WHERE email='$email'";
+		$sql="SELECT * FROM accounts2 WHERE email='$email'";
 		$result=$conn->query($sql);
 		if(!$result)
 		{
@@ -67,7 +67,7 @@
 			<input name="submit" type="submit" id="submit" value="Submit">
 			</form>';
 						
-			$sql2 = "INSERT INTO $userTable VALUES ('$email', '$loginUserId', '$ps')";
+			$sql2 = "INSERT INTO $userTable VALUES (NULL, '$email', '$loginUserId', '$ps')";
 		
 			$query_result = $conn->query($sql2) or die( "SQL Query ERROR. User can not be created.");
 				
@@ -115,7 +115,7 @@
 				<input name="submit" type="submit" id="submit" value="Submit">
 				</form>';
 					
-				$sql2 = "INSERT INTO $userTable VALUES ('$email', '$loginUserId', '$ps')";
+				$sql2 = "INSERT INTO $userTable VALUES (NULL, '$email', '$loginUserId', '$ps')";
 		
 				$query_result = $conn->query($sql2) or die( "SQL Query ERROR. User can not be created.");
 			

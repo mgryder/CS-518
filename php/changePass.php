@@ -21,7 +21,7 @@
 		}
 		else
 		{
-			$sql = "UPDATE accounts SET pass='$passEnc' WHERE pass = '$oldPass'";
+			$sql = "UPDATE accounts2 SET pass='$passEnc' WHERE pass = '$oldPass'";
 			echo "$sql";
 			$conn->query($sql);
 			$conn->close();

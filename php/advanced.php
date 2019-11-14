@@ -1,6 +1,11 @@
 <?php
 	require 'vendor/autoload.php';
 	
+	require 'authentication.php';
+	
+	session_start();
+	$conn = new mysqli($server, $sqlUsername, $sqlPassword, $databaseName);
+	$userTable = "results";
 	$client = Elasticsearch\ClientBuilder::create()->build();
 	
 	echo '<header style="background-color:green; height:10%">
@@ -35,6 +40,8 @@
 	
 	if(isset($_POST["name"]))
 	{
+		$clearTable="TRUNCATE TABLE results";
+		$query_result=$conn->query($clearTable) or die("Unable to clear table");
 		$keywords=filter_var($_POST["name"], FILTER_SANITIZE_STRING);
 	
 		$params = [
@@ -57,11 +64,22 @@
 			$result[$i]=$response['hits']['hits'][$i]['_source'];
 			$i++;
 		}
-		foreach($result as $key => $value)
+		if(empty($result))
 		{
-			echo $value['name']."<br>";
-			echo $value['genres']."<br>";
-			echo $value['platforms']."<br><br>";
+			echo "No results found for ".$keywords."<br>";
+		}
+		else
+		{
+			foreach($result as $key => $value)
+			{
+				//echo "contains: ", $_POST["name"], "<br>";
+				$name=$value['name'];
+				$cat=$value['genres'];
+				$plat=$value['platforms'];
+				$sql = "INSERT INTO $userTable VALUES (NULL, '$name', '$cat', '$plat')";
+				//echo "$sql";
+			$query_result = $conn->query($sql) or die( "SQL Query ERROR. Result can not be retrieved.");
+			}
 		}
 	
 		//print_r($response);
@@ -90,12 +108,24 @@
 			$result[$i]=$response['hits']['hits'][$i]['_source'];
 			$i++;
 		}
-		foreach($result as $key => $value)
+		if(empty($result))
 		{
-			echo $value['name']."<br>";
-			echo $value['genres']."<br>";
-			echo $value['platforms']."<br><br>";
+			echo "No results found for ".$keywords."<br>";
 		}
+		else
+		{
+			foreach($result as $key => $value)
+			{
+				//echo "contains: ", $_POST["cat"], "<br>";
+				$name=$value['name'];
+				$cat=$value['genres'];
+				$plat=$value['platforms'];
+				$sql = "INSERT INTO $userTable VALUES (NULL, '$name', '$cat', '$plat')";
+				//echo "$sql";
+			$query_result = $conn->query($sql) or die( "SQL Query ERROR. Result can not be retrieved.");
+			}
+		}
+		
 	
 		//print_r($response);
 	}
@@ -123,15 +153,77 @@
 			$result[$i]=$response['hits']['hits'][$i]['_source'];
 			$i++;
 		}
-		foreach($result as $key => $value)
+		if(empty($result))
 		{
-			echo $value['name']."<br>";
-			echo $value['genres']."<br>";
-			echo $value['platforms']."<br><br>";
+			echo "No results found for ".$keywords."<br>";
+		}
+		else
+		{
+			foreach($result as $key => $value)
+			{
+				//echo "contains: ", $_POST["plat"], "<br>";
+				$name=$value['name'];
+				$cat=$value['genres'];
+				$plat=$value['platforms'];
+				$sql = "INSERT INTO $userTable VALUES (NULL, '$name', '$cat', '$plat')";
+				//echo "$sql";
+			$query_result = $conn->query($sql) or die( "SQL Query ERROR. Result can not be retrieved.");
+			}
 		}
 	
 		//print_r($response);
 	}
+	if(!(isset($_GET['page'])))
+	{
+		//echo "set to one";
+		$page=1;
+	}
+	else
+	{
+		$page=$_GET['page'];
+	}
+	if($page<1)
+	{
+		//echo "set to one";
+		$page=1;
+	}
+	$next=$page+1;
+	$prev=$page-1;
+	if($prev<1)
+	{
+		$prev=1;
+	}
+	$i=$page-1;
+	$i=$i*5;
+	$i=$i+1;
+	$limit=$i+5;
+	while($i<$limit)
+	{
+		$sql = "SELECT id, name, cat, plat FROM results where id = '$i'";
+		$doc = $conn->query($sql);
+		if ($doc) {
+            while ($line = $doc->fetch_assoc()) {
+				echo "<br>";
+				$c=1;
+				foreach ($line as $cell) {
+					if($c==1)
+					{
+						echo "<a href='doc.php?id=$cell'>Follow link</a><br>";
+					}
+					else
+					{
+						echo "$cell<br>";
+					}
+					$c++;
+				}
+			}
+        }
+		$i++;
+	}
+	echo "<br><a href='{$_SERVER['PHP_SELF']}?page=1'>First</a>
+		<a href='{$_SERVER['PHP_SELF']}?page=$prev'>Prev</a>
+		<a href='{$_SERVER['PHP_SELF']}?page=$next'>Next</a>";
+	
 	
 ?>
 <html>

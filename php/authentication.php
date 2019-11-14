@@ -10,7 +10,7 @@
 
 	function authenticateUser($connection, $username, $password)
 	{ 
-	  $userTable = "accounts"; 
+	  $userTable = "accounts2"; 
 
 	  if (!isset($username) || !isset($password))
 	  {
