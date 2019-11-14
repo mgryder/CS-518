@@ -6,8 +6,8 @@
 	session_start();
 	$conn = new mysqli($server, $sqlUsername, $sqlPassword, $databaseName);
 	
-	$clearTable="TRUNCATE TABLE results";
-	$query_result=$conn->query($clearTable) or die("Unable to clear table");
+	//$clearTable="TRUNCATE TABLE results";
+	//$query_result=$conn->query($clearTable) or die("Unable to clear table");
 	
 	echo '<header style="background-color:green; height:10%">
 			<h1>Gryder Gaming Database</h1>
