@@ -32,6 +32,7 @@
 <html>
 	<head>
 		<title>Login</title>
+		<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 	</head>
 	<body>
 		<Strong> <?php echo $errorMessage ?> </Strong>
@@ -39,6 +40,7 @@
 		<br>
 		Forgot password? <a href="editPass.php">Reset password</a>
 		<form action="" method="post" name="frmLogin" id="frmLogin">
+			 <div class="g-recaptcha" data-sitekey="6Lfjv8IUAAAAAE9DZw40w8nmsoN5jb9cBqxHSlRv"></div>
 			 <table width="400" border="1" align="center" cellpadding="2" cellspacing="2">
 				  <tr>
 					<td width="150">User ID</td>
