@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 14, 2019 at 02:58 PM
+-- Generation Time: Dec 05, 2019 at 04:47 AM
 -- Server version: 8.0.17
 -- PHP Version: 7.3.9
 
@@ -30,16 +30,16 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `games` (
   `id` int(11) NOT NULL,
-  `game` varchar(256) NOT NULL
+  `game` varchar(256) NOT NULL,
+  `gameId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `games`
 --
 
-INSERT INTO `games` (`id`, `game`) VALUES
-(1, 'http://localhost/doc.php?id=1'),
-(1, 'http://localhost/doc.php?id=2');
+INSERT INTO `games` (`id`, `game`, `gameId`) VALUES
+(1, 'doc.php?id=713', 713);
 
 --
 -- Indexes for dumped tables

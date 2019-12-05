@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 14, 2019 at 02:57 PM
+-- Generation Time: Dec 05, 2019 at 04:47 AM
 -- Server version: 8.0.17
 -- PHP Version: 7.3.9
 
@@ -40,7 +40,8 @@ CREATE TABLE `accounts2` (
 --
 
 INSERT INTO `accounts2` (`id`, `email`, `user`, `pass`) VALUES
-(1, 'mgryd001@odu.edu', '1234', '81dc9bdb52d04dc20036dbd8313ed055');
+(1, 'mgryd001@odu.edu', '1234', '81dc9bdb52d04dc20036dbd8313ed055'),
+(2, 'chesschamptwo@gmail.com', 'chess', '81dc9bdb52d04dc20036dbd8313ed055');
 
 --
 -- Indexes for dumped tables
@@ -60,7 +61,7 @@ ALTER TABLE `accounts2`
 -- AUTO_INCREMENT for table `accounts2`
 --
 ALTER TABLE `accounts2`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

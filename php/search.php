@@ -26,7 +26,7 @@
 			'index' => 'games',
 			'body' => [
 				'query' => [
-					'match' => [
+					'fuzzy' => [
 						'name' => $keywords
 					]
 				]
@@ -39,7 +39,7 @@
 	
 		while($i<$hits)
 		{
-			$result[$i]=$response['hits']['hits'][$i]['_source'];
+			$result[$i]=$response['hits']['hits'][$i]['_id'];
 			$i++;
 		}
 		if(empty($result))
@@ -52,13 +52,20 @@
 			$query_result=$conn->query($clearTable) or die("Unable to clear table");
 			foreach($result as $key => $value)
 			{
+				$params=[
+					'index' => 'games',
+					'id' => $value
+				];
+				$docs=$client->get($params);
+				//print_r($docs);
 				//echo "contains: ", $_POST["keywords"], "<br>";
-				$name=$value['name'];
-				$cat=$value['genres'];
-				$plat=$value['platforms'];
-				$sql = "INSERT INTO $userTable VALUES (NULL, '$name', '$cat', '$plat')";
+				//echo $value;
+				$name=$docs['_source']['name'];
+				$cat=$docs['_source']['genres'];
+				$plat=$docs['_source']['platforms'];
+				$sql = "INSERT INTO $userTable VALUES (NULL, '$name', '$cat', '$plat', '$value')";
 				//echo "$sql";
-			$query_result = $conn->query($sql) or die( "SQL Query ERROR. Result can not be retrieved.");
+				$query_result = $conn->query($sql) or die( "SQL Query ERROR. Result can not be retrieved.");
 			}
 		}
 	}
@@ -93,7 +100,7 @@
 	$limit=$i+5;
 	while($i<$limit)
 	{
-		$sql = "SELECT id, name, cat, plat FROM results where id = '$i'";
+		$sql = "SELECT id, name, cat, plat, gameId FROM results where id = '$i'";
 		$doc = $conn->query($sql);
 		if ($doc) {
             while ($line = $doc->fetch_assoc()) {
@@ -101,13 +108,16 @@
 				$c=1;
 				echo "contains: ", $keywords, "<br>";
 				foreach ($line as $cell) {
-					if($c==1)
+					if($c==5)
 					{
 						echo "<a href='doc.php?id=$cell'>Follow link</a><br>";
 					}
 					else
 					{
-						echo "$cell<br>";
+						if($c>1)
+						{
+							echo "$cell<br>";
+						}
 					}
 					$c++;
 				}
